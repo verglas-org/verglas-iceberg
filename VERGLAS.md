@@ -15,10 +15,10 @@ Pin Verglas (and any consumer) to a **commit SHA** on `verglas/v0.9.1`, not a fl
 
 1. **`TableCommit::from_parts`** (`crates/iceberg/src/catalog/mod.rs`)
    Upstream keeps `TableCommit` construction private so clients must use
-   `Transaction`. In 0.9.1 that API cannot express overwrite/replace or
-   `RemoveSnapshots`. Verglas compaction and `_LOGS` retention build those
-   commits at the manifest layer and need a public constructor to hand them to
-   `Catalog::update_table`.
+   `Transaction`. In 0.9.1 that API cannot express replace or
+   `RemoveSnapshots`. Verglas compaction (and post-compact snapshot expiry)
+   builds those commits at the manifest/metadata layer and needs a public
+   constructor to hand them to `Catalog::update_table`.
 
 Drop each patch when the equivalent lands upstream (e.g. `ExpireSnapshotsAction`
 in 0.10; `OverwriteAction` still pending). Prefer upstreaming over growing this
