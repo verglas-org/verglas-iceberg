@@ -387,6 +387,34 @@ pub struct TableCommit {
 }
 
 impl TableCommit {
+    /// Builds a [`TableCommit`] from its parts.
+    ///
+    /// VERGLAS PATCH (not upstream). Apache upstream marks the derived
+    /// builder's `build` `pub(crate)`, so a `TableCommit` can only come from
+    /// the `Transaction` action set — which has no public replace/overwrite
+    /// action. Verglas compaction and post-compact snapshot expiry build those
+    /// commits at the manifest/metadata layer and hand them to
+    /// `Catalog::update_table`, so they need a public constructor.
+    ///
+    /// On this branch the Lakekeeper base already drops that `pub(crate)`
+    /// visibility, so `TableCommit::builder()` is public and this function is a
+    /// thin named alias for it rather than the only way in. It is kept so the
+    /// Verglas call sites read as one intent-revealing call; delete it and use
+    /// the builder directly if that stops being worth a patch.
+    ///
+    /// The caller owns building correct `requirements` (for CAS) and `updates`.
+    pub fn from_parts(
+        ident: TableIdent,
+        requirements: Vec<TableRequirement>,
+        updates: Vec<TableUpdate>,
+    ) -> Self {
+        Self {
+            ident,
+            requirements,
+            updates,
+        }
+    }
+
     /// Return the table identifier.
     pub fn identifier(&self) -> &TableIdent {
         &self.ident
