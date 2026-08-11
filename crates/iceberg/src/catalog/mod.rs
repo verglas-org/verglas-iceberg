@@ -389,12 +389,11 @@ impl TableCommit {
     ///
     /// VERGLAS PATCH (not upstream): the derived builder's `build` is
     /// `pub(crate)`, so upstream a `TableCommit` can only be produced by the
-    /// `Transaction` action set — which in 0.9.1 offers fast-append and property
-    /// updates but no overwrite/delete. Verglas compaction needs to commit
-    /// replace snapshots (and post-compact snapshot expiry needs
-    /// `RemoveSnapshots`) through `Catalog::update_table`, so this exposes the
-    /// same construction the transaction layer uses internally. The caller owns
-    /// building correct `requirements` (for CAS) and `updates`.
+    /// `Transaction` action set, which still has no overwrite or replace action.
+    /// Verglas compaction needs to commit replace snapshots through
+    /// `Catalog::update_table`, so this exposes the same construction the
+    /// transaction layer uses internally. The caller owns building correct
+    /// `requirements` (for CAS) and `updates`.
     pub fn from_parts(
         ident: TableIdent,
         requirements: Vec<TableRequirement>,
