@@ -46,6 +46,7 @@ in this repository.
 - `crates/integration_tests/`, `crates/test_utils/`, `crates/sqllogictest/`: test infrastructure and end-to-end coverage.
 - `bindings/`: language bindings.
 - `dev/`, `docs/`, `website/`: development tooling and open-source documentation.
+- `.github/workflows/weekly-upstream-sync.yml`: weekly upstream PR creation; conflicts remain open for manual resolution.
 - `VERGLAS.md`: private fork identity, upstream relationship, and carried patch inventory.
 
 ## Patch discipline
