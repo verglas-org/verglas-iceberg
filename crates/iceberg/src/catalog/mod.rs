@@ -385,6 +385,27 @@ pub struct TableCommit {
 }
 
 impl TableCommit {
+    /// Builds a [`TableCommit`] from its parts.
+    ///
+    /// VERGLAS PATCH (not upstream): the derived builder's `build` is
+    /// `pub(crate)`, so upstream a `TableCommit` can only be produced by the
+    /// `Transaction` action set, which still has no overwrite or replace action.
+    /// Verglas compaction needs to commit replace snapshots through
+    /// `Catalog::update_table`, so this exposes the same construction the
+    /// transaction layer uses internally. The caller owns building correct
+    /// `requirements` (for CAS) and `updates`.
+    pub fn from_parts(
+        ident: TableIdent,
+        requirements: Vec<TableRequirement>,
+        updates: Vec<TableUpdate>,
+    ) -> Self {
+        Self {
+            ident,
+            requirements,
+            updates,
+        }
+    }
+
     /// Return the table identifier.
     pub fn identifier(&self) -> &TableIdent {
         &self.ident
