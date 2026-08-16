@@ -15,23 +15,24 @@
 // specific language governing permissions and limitations
 // under the License.
 
-//! Encryption module for Apache Iceberg.
-//!
-//! This module provides core cryptographic primitives and key management
-//! for encrypting and decrypting data in Iceberg tables.
 
-mod crypto;
-pub(crate) mod io;
-pub(crate) mod key_metadata;
-pub mod kms;
-mod manager;
-mod stream;
+use std::collections::HashMap;
 
-pub use crypto::{AesGcmCipher, AesKeySize, SecureKey};
-pub use io::{EncryptedInputFile, EncryptedOutputFile};
-pub use key_metadata::StandardKeyMetadata;
-pub use kms::{GeneratedKey, KeyManagementClient};
-pub use manager::EncryptionManager;
-pub use stream::{AesGcmFileRead, AesGcmFileWrite};
+use iceberg_property_macro::Properties;
 
-pub use crate::sensitive::SensitiveBytes;
+fn parse_all(
+    _properties: &HashMap<String, String>,
+    _key: &str,
+    _additional_keys: &[&str],
+    default: u64,
+) -> iceberg::Result<u64> {
+    Ok(default)
+}
+
+#[derive(Properties)]
+struct ParsePropertiesWithoutAdditionalKeys {
+    #[property(key = "value", default = 1, parse_properties_with = parse_all)]
+    value: u64,
+}
+
+fn main() {}

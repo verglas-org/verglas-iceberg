@@ -15,23 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-//! Encryption module for Apache Iceberg.
-//!
-//! This module provides core cryptographic primitives and key management
-//! for encrypting and decrypting data in Iceberg tables.
-
-mod crypto;
-pub(crate) mod io;
-pub(crate) mod key_metadata;
-pub mod kms;
-mod manager;
-mod stream;
-
-pub use crypto::{AesGcmCipher, AesKeySize, SecureKey};
-pub use io::{EncryptedInputFile, EncryptedOutputFile};
-pub use key_metadata::StandardKeyMetadata;
-pub use kms::{GeneratedKey, KeyManagementClient};
-pub use manager::EncryptionManager;
-pub use stream::{AesGcmFileRead, AesGcmFileWrite};
-
-pub use crate::sensitive::SensitiveBytes;
+#[test]
+fn reports_invalid_property_annotations() {
+    trybuild::TestCases::new().compile_fail("tests/compile-fail/*.rs");
+}

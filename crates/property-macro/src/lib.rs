@@ -15,23 +15,20 @@
 // specific language governing permissions and limitations
 // under the License.
 
-//! Encryption module for Apache Iceberg.
-//!
-//! This module provides core cryptographic primitives and key management
-//! for encrypting and decrypting data in Iceberg tables.
+#![doc = include_str!("../README.md")]
 
-mod crypto;
-pub(crate) mod io;
-pub(crate) mod key_metadata;
-pub mod kms;
-mod manager;
-mod stream;
+use proc_macro::TokenStream;
+use syn::{DeriveInput, parse_macro_input};
 
-pub use crypto::{AesGcmCipher, AesKeySize, SecureKey};
-pub use io::{EncryptedInputFile, EncryptedOutputFile};
-pub use key_metadata::StandardKeyMetadata;
-pub use kms::{GeneratedKey, KeyManagementClient};
-pub use manager::EncryptionManager;
-pub use stream::{AesGcmFileRead, AesGcmFileWrite};
+mod properties;
 
-pub use crate::sensitive::SensitiveBytes;
+/// Derives property-map parsing and opt-in read-only accessors for a struct.
+#[proc_macro_derive(Properties, attributes(property))]
+pub fn derive_properties(input: TokenStream) -> TokenStream {
+    let input = parse_macro_input!(input as DeriveInput);
+
+    match properties::expand_properties(input) {
+        Ok(tokens) => tokens.into(),
+        Err(error) => error.into_compile_error().into(),
+    }
+}
